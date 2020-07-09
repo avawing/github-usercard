@@ -51,13 +51,33 @@ axios
 let data = res.data;
 let card = createCard(data);
 const cards = document.querySelector('.cards');
-
 cards.appendChild(card);
+
+let followers = `${api}/followers`
+
+axios
+.get(followers)
+.then(
+  res => {
+    let data = res.data;
+    data.forEach(item =>{
+      cards.appendChild(createCard(item))
+    })
+    
+
+    return card
+  }
+)
+.catch(e => {console.log(`There was an error${e}`)})
+
   
 return card
 })
 .catch(e => {console.log(`There was an error${e}`)});
 }
+
+
+
 
 followersArray.forEach(item => creation(item))
 
