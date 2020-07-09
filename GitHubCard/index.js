@@ -1,13 +1,17 @@
+import axios from 'axios'
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-axios
-.get('https://api.github.com/users/avawing')
-.then(res => {let data = res
-return data})
-.catch(e => {console.log(`There was an error${e}`)});
+
+
+
+
+
+
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -20,7 +24,7 @@ return data})
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
-createCard()
+
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
     follow this link in your browser https://api.github.com/users/<Your github name>/followers,
@@ -32,7 +36,30 @@ createCard()
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
+const users = ['avawing', 'tetondan','dustinmyers','justsml','luishrd', 'bigknell'];
+
+const followersArray = users.map(item => {return`https://api.github.com/users/${item}`})
+
+console.log(followersArray)
+
+
+function creation(api){
+axios
+.get(api)
+.then(res => {
+let data = res.data;
+let card = createCard(data);
+const cards = document.querySelector('.cards');
+
+cards.appendChild(card);
+  
+return card
+})
+.catch(e => {console.log(`There was an error${e}`)});
+}
+
+followersArray.forEach(item => creation(item))
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -61,19 +88,28 @@ function createCard(obj){
   let card = document.createElement('div')
   let proimg =  document.createElement('img')
   let subdiv = document.createElement('div')
-  let header = document.createElement('h3').textContent = obj.name
-  let username = document.createElement('p').textContent = obj.login
-  let location =document.createElement('p').textContent = obj.location
-  let profile =document.createElement('p').textContent = `Profile: ${obj.html_url}`
+  let header = document.createElement('h3')
+  let username = document.createElement('p')
+  let location =document.createElement('p')
+  let profile =document.createElement('p')
   let link = document.createElement('a')
-  let followers = document.createElement('p').textContent = `Followers: ${obj.followers}`
-  let following = document.createElement('p').textContent = `Following: ${obj.following}`
-  let bio = document.createElement('p').textContent = `Bio: ${obj.bio}`
+  let followers = document.createElement('p')
+  let following = document.createElement('p')
+  let bio = document.createElement('p')
+
+  header.textContent = obj.name
+  username.textContent = obj.login
+  location.textContent = obj.location
+  profile.textContent =`Profile: ${obj.html_url}`
+  followers.textContent = `Followers: ${obj.followers}`
+  following.textContent = `Following: ${obj.following}`
+  bio.textContent = `Bio: ${obj.bio}`
 
   //set attributes
   card.setAttribute('class', 'card')
   proimg.setAttribute('src', obj.avatar_url)
   subdiv.setAttribute('class', 'card-info')
+  link.setAttribute('href', obj.html_url)
 
   //append children
   card.appendChild(proimg)
@@ -90,8 +126,10 @@ function createCard(obj){
   subdiv.appendChild(following)
   subdiv.appendChild(bio)
 
-  return document.querySelector('.cards').appendChild(card)
+  return card
 }
+
+
 
 /*
   List of LS Instructors Github username's:
@@ -101,4 +139,6 @@ function createCard(obj){
     luishrd
     bigknell
 */
-createCard(followersArray)
+
+//followersArray.forEach(item => document.querySelector('.cards').appendChild(createCard(item)))
+//createCard(followersArray)
